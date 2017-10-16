@@ -28,11 +28,17 @@ class EmojiTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
         
+        let cfstr = NSMutableString(string: String(emojis[indexPath.row])) as CFMutableString
+        var range = CFRangeMake(0, CFStringGetLength(cfstr))
+        CFStringTransform(cfstr, &range, kCFStringTransformToUnicodeName, false)
         
-        cell.textLabel?.text = emojis[indexPath.row]
-        
+        cell.textLabel?.text = emojis[indexPath.row] + String(cfstr)
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "ourSegue", sender: nil)
     }
  
 
