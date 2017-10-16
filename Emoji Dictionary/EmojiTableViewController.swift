@@ -11,6 +11,8 @@ import UIKit
 class EmojiTableViewController: UITableViewController {
 
     var emojis = ["😀", "💩", "👻", "😂", "😎"]
+    // NOTE: These ranges are still just a subset of all the emoji characters;
+    //       they seem to be all over the place...
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,18 +30,23 @@ class EmojiTableViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
         
-        let cfstr = NSMutableString(string: String(emojis[indexPath.row])) as CFMutableString
-        var range = CFRangeMake(0, CFStringGetLength(cfstr))
-        CFStringTransform(cfstr, &range, kCFStringTransformToUnicodeName, false)
-        
-        cell.textLabel?.text = emojis[indexPath.row] + String(cfstr)
+        cell.textLabel?.text = emojis[indexPath.row]
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ourSegue", sender: nil)
+        
+        let emoji = emojis[indexPath.row]
+        
+        performSegue(withIdentifier: "ourSegue", sender: emoji)
     }
  
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let emojiDefVC = segue.destination as! EmojiDictionaryViewController
+        emojiDefVC.emoji = sender as! String
+    }
+    
+    
+    
 }
